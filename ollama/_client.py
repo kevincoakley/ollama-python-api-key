@@ -35,6 +35,7 @@ class BaseClient:
     self,
     client,
     host: Optional[str] = None,
+    api_key: Optional[str] = None,
     follow_redirects: bool = True,
     timeout: Any = None,
     **kwargs,
@@ -51,6 +52,8 @@ class BaseClient:
     headers['Content-Type'] = 'application/json'
     headers['Accept'] = 'application/json'
     headers['User-Agent'] = f'ollama-python/{__version__} ({platform.machine()} {platform.system().lower()}) Python/{platform.python_version()}'
+    if api_key or os.getenv('OLLAMA_API_KEY'):
+      headers['Api-Key'] = api_key or os.getenv('OLLAMA_API_KEY')
 
     self._client = client(
       base_url=_parse_host(host or os.getenv('OLLAMA_HOST')),
